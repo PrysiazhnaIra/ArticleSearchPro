@@ -8,11 +8,11 @@ import { Button } from "./components/Button/Button";
 import { ClickCounter } from "./components/ClickCounter/ClickCounter";
 
 export default function App() {
-  // const [clicks, setClicks] = useState(0);
+  const [clicks, setClicks] = useState(0);
 
-  // const handleClick = () => {
-  //   setClicks(clicks + 1);
-  // };
+  const handleClick = () => {
+    setClicks(clicks + 1);
+  };
 
   return (
     <>
