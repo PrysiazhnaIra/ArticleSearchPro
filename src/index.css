@@ -5,7 +5,6 @@
 
   color-scheme: light dark;
   color: black;
-  background-color: white;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -14,12 +13,14 @@
 }
 
 /* global styles */
+
 body {
   font-family: sans-serif;
   line-height: 1.5;
   margin: 0 auto;
   display: flex;
   justify-content: center;
+  background-color: #b1dec56f;
 }
 
 h1,
@@ -48,10 +49,4 @@ a {
   color: currentColor;
   text-decoration: none;
   display: inline-block;
-}
-
-.main-title {
-  display: flex;
-  justify-content: center;
-  margin: 30px;
 }
