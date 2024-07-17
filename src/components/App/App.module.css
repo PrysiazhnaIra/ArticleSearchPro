@@ -5,3 +5,23 @@
   font-size: 40px;
   font-family: "Brush Script MT", cursive;
 }
+
+.btnMore {
+  display: block;
+  margin: 0 auto;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  color: #fff;
+  background-color: #118320;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  align-items: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.btnMore:hover {
+  background-color: #0c4e13;
+}

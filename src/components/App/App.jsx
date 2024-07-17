@@ -1,73 +1,65 @@
 import { useEffect, useState } from "react";
 import css from "./App.module.css";
-import axios from "axios";
 import ArticleList from "../ArticleList/ArticleList";
-import { Audio } from "react-loader-spinner";
+import Loader from "../Loader/Loader";
 import { fetchArticlesWithTopic } from "../../articles-api";
 import SearchForm from "../SearchForm/SearchForm";
 
 export default function App() {
-  // 4. Оголошуємо стан
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
+  const [page, setPage] = useState(0);
+  const [topic, setTopic] = useState("");
+  const [btnClicked, setBtnClicked] = useState(true);
 
-  // useEffect(() => {
-  //   // 1. Оголошуємо асинхронну функцію
-  //   async function fetchArticles() {
-  //     try {
-  //       setLoading(true);
-  //       //3. Http request
-  //       const data = await fetchArticlesWithTopic("react");
-  //       console.log(data);
-  //       // 5. Записуємо дані в стан
-  //       setArticles(data);
-  //     } catch (error) {
-  //       // Тут будемо обробляти помилку
-  //       // Встановлюємо стан error в true
-  //       setError(true);
-  //     } finally {
-  //       // Встановлюємо індикатор в false після запиту
-  //       setLoading(false);
-  //     }
-  //   }
-  //   // 2. Викликаємо її одразу після оголошення
-  //   fetchArticles();
-  // }, []);
+  // Виконується при зміні page або topic
+  useEffect(() => {
+    if (!topic) return; // Не виконуємо запит, якщо тема порожня
+    // Функція для отримання статей з сервера
+    const fetchArticles = async () => {
+      try {
+        setLoading(true);
 
-  const handleSearch = async (topic) => {
-    try {
-      setArticles([]);
-      setError(false);
-      setLoading(true);
-      const data = await fetchArticlesWithTopic(topic);
-      setArticles(data);
-    } catch (error) {
-      setError(true);
-    } finally {
-      setLoading(false);
-    }
+        // Виконуємо запит на отримання статей з поточною темою та сторінкою
+        const data = await fetchArticlesWithTopic(topic, page);
+
+        setArticles((prev) => [...prev, ...data]); // Додаємо нові статті до поточного списку
+      } catch (error) {
+        setError(true); // Помилка запиту
+      } finally {
+        setLoading(false); // Завершення завантаження
+      }
+    };
+    // Викликаємо функцію для отримання статей при зміні сторінки або теми
+    fetchArticles();
+  }, [page, btnClicked]);
+
+  const handleSearch = (newTopic) => {
+    setArticles([]); // Очищаємо статті
+    setError(false); // Скидаємо помилку
+    setPage(0); // Скидаємо сторінку
+    setTopic(newTopic); // Встановлюємо нову тему
+    setBtnClicked((prev) => !prev);
   };
 
   return (
     <>
       <h1 className={css.title}>Latest articles</h1>
       <SearchForm onSearch={handleSearch} />
-      {loading && (
-        <Audio
-          height="80"
-          width="80"
-          radius="9"
-          color="green"
-          ariaLabel="three-dots-loading"
-          wrapperStyle
-          wrapperClass
-        />
-      )}
+      {loading && <Loader />}
       {error && (
         <p>Whoops, something went wrong! Please try reloading this page!</p>
       )}
       {articles.length > 0 && <ArticleList items={articles} />}
+      {articles.length > 0 && !loading && (
+        <button
+          className={css.btnMore}
+          onClick={() => setPage((prev) => prev + 1)}
+        >
+          Load more
+        </button>
+      )}
     </>
   );
 }
